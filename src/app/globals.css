@@ -1,0 +1,181 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  
+  /* Custom Semantic Colors */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+  
+  /* Base - Light Mode */
+  --background: #F5F5F5; /* User: Off White */
+  --foreground: #1A1A1A; /* User: Almost Black */
+
+  /* Card */
+  --card: #FFFFFF; /* User: Pure White */
+  --card-foreground: #1A1A1A;
+  
+  --popover: #FFFFFF;
+  --popover-foreground: #1A1A1A;
+
+  /* Primary Blue */
+  --primary: #0066FF; 
+  --primary-foreground: #FFFFFF;
+
+  /* Secondary - Using Purple for branded accents or standard neutral? 
+     User said "Header gradient: Blue -> Purple". 
+     I'll make secondary a neutral for now to not clash, uses Dark Grey */
+  --secondary: #E0E0E0; /* Light Grey */
+  --secondary-foreground: #1A1A1A;
+
+  /* Muted */
+  --muted: #E0E0E0;
+  --muted-foreground: #9E9E9E; /* Medium Grey */
+
+  /* Accent */
+  --accent: #E0E0E0;
+  --accent-foreground: #1A1A1A;
+
+  /* Destructive */
+  --destructive: #D32F2F; /* User: Error Red */
+  --destructive-foreground: #FFFFFF;
+
+  /* Custom Semantics */
+  --success: #00C853; /* User: Success Green */
+  --success-foreground: #FFFFFF;
+  
+  --warning: #FF6D00; /* User: Warning Orange */
+  --warning-foreground: #FFFFFF;
+  
+  --info: #7C4DFF; /* User: Info Purple */
+  --info-foreground: #FFFFFF;
+
+  /* Borders & Inputs */
+  --border: #E0E0E0; /* Light Grey */
+  --input: #E0E0E0;
+  --ring: #0066FF; /* Primary */
+
+  /* Chart Colors (Gradients later, placeholders) */
+  --chart-1: #0066FF;
+  --chart-2: #00C853;
+  --chart-3: #FF6D00;
+  --chart-4: #7C4DFF;
+  --chart-5: #D32F2F;
+
+  /* Sidebar */
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #1A1A1A;
+  --sidebar-primary: #0066FF;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F5F5F5;
+  --sidebar-accent-foreground: #1A1A1A;
+  --sidebar-border: #E0E0E0;
+  --sidebar-ring: #0066FF;
+}
+
+.dark {
+  /* Base - Dark Mode */
+  --background: #121212; /* User: True black avoidance, but user requested 121212 */
+  --foreground: #E0E0E0; /* User: High contrast but not pure white */
+
+  /* Card */
+  --card: #1E1E1E; /* User: Surface */
+  --card-foreground: #E0E0E0;
+  
+  --popover: #1E1E1E;
+  --popover-foreground: #E0E0E0;
+
+  /* Primary - Maybe softer for dark mode? Or keep brand? Keeping brand for now */
+  --primary: #0066FF; 
+  --primary-foreground: #FFFFFF;
+
+  --secondary: #2A2A2A;
+  --secondary-foreground: #E0E0E0;
+
+  --muted: #2A2A2A;
+  --muted-foreground: #9E9E9E;
+
+  --accent: #2A2A2A;
+  --accent-foreground: #E0E0E0;
+
+  --destructive: #D32F2F;
+  --destructive-foreground: #FFFFFF;
+
+  /* Custom Semantics */
+  --success: #00C853;
+  --success-foreground: #FFFFFF;
+  --warning: #FF6D00;
+  --warning-foreground: #FFFFFF;
+  --info: #7C4DFF;
+  --info-foreground: #FFFFFF;
+
+  --border: #2A2A2A; 
+  --input: #2A2A2A;
+  --ring: #0066FF;
+
+  --sidebar: #1E1E1E;
+  --sidebar-foreground: #E0E0E0;
+  --sidebar-primary: #0066FF;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #2A2A2A;
+  --sidebar-accent-foreground: #E0E0E0;
+  --sidebar-border: #2A2A2A;
+  --sidebar-ring: #0066FF;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
