@@ -20,6 +20,7 @@ const formSchema = z.object({
 export default function LoginPage() {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -30,6 +31,7 @@ export default function LoginPage() {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true)
+        setError(null)
         try {
             const result = await signIn("credentials", {
                 redirect: false,
@@ -38,7 +40,7 @@ export default function LoginPage() {
             })
 
             if (result?.error) {
-                // Show error (would use toast here)
+                setError("Neplatný email nebo heslo")
                 console.error(result.error)
             } else {
                 router.push("/dashboard")
@@ -92,6 +94,11 @@ export default function LoginPage() {
                                 <p className="text-sm font-medium text-destructive">{form.formState.errors.password.message}</p>
                             )}
                         </div>
+                        {error && (
+                            <div className="bg-destructive/15 text-destructive text-sm p-3 rounded-md flex items-center gap-x-2">
+                                <p>{error}</p>
+                            </div>
+                        )}
                         <Button className="w-full" type="submit" disabled={loading}>
                             {loading ? "Přihlašování..." : "Přihlásit se"}
                         </Button>
@@ -118,6 +125,6 @@ export default function LoginPage() {
                     </Link>
                 </CardFooter>
             </Card>
-        </div>
+        </div >
     )
 }

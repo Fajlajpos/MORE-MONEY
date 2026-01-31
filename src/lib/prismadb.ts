@@ -2,7 +2,9 @@
 // The real Prisma binary is blocked on this system.
 // This allows the app to run in-memory.
 
-const inMemoryStore: any = {
+const globalForPrisma = global as unknown as { prismaMockStore: any };
+
+const inMemoryStore = globalForPrisma.prismaMockStore || {
     user: [
         {
             id: "admin_user",
@@ -25,6 +27,8 @@ const inMemoryStore: any = {
     notification: [],
     userSettings: []
 };
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prismaMockStore = inMemoryStore;
 
 export const prisma = {
     user: {

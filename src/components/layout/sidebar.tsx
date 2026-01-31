@@ -12,7 +12,8 @@ import {
     Trophy,
     Settings,
     Menu,
-    X
+    X,
+    Bot
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -28,6 +29,7 @@ const sidebarItems = [
     { icon: Target, label: "Cíle", href: "/goals" },
     { icon: TrendingUp, label: "Investice", href: "/investments" },
     { icon: Trophy, label: "Úspěchy", href: "/achievements" },
+    { icon: Bot, label: "AI Asistent", href: "/ai" },
 ]
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> { }
@@ -72,9 +74,11 @@ export function Sidebar({ className }: SidebarProps) {
                         Nastavení
                     </h2>
                     <div className="space-y-1">
-                        <Button variant="ghost" className="w-full justify-start gap-3">
-                            <Settings className="h-5 w-5" />
-                            Nastavení účtu
+                        <Button variant="ghost" className="w-full justify-start gap-3" asChild>
+                            <Link href="/settings">
+                                <Settings className="h-5 w-5" />
+                                Nastavení účtu
+                            </Link>
                         </Button>
                     </div>
                 </div>

@@ -23,6 +23,7 @@ const formSchema = z.object({
 export default function RegisterPage() {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -35,6 +36,7 @@ export default function RegisterPage() {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true)
+        setError(null)
         try {
             const response = await fetch("/api/auth/register", {
                 method: "POST",
@@ -48,12 +50,14 @@ export default function RegisterPage() {
 
             if (!response.ok) {
                 const error = await response.text()
-                console.error(error) // Handle error visualization
+                setError(error)
+                console.error(error)
                 return
             }
 
             router.push("/login")
         } catch (error) {
+            setError("Something went wrong")
             console.error(error)
         } finally {
             setLoading(false)
@@ -124,6 +128,11 @@ export default function RegisterPage() {
                                 <p className="text-sm font-medium text-destructive">{form.formState.errors.confirmPassword.message}</p>
                             )}
                         </div>
+                        {error && (
+                            <div className="bg-destructive/15 text-destructive text-sm p-3 rounded-md flex items-center gap-x-2">
+                                <p>{error}</p>
+                            </div>
+                        )}
                         <Button className="w-full" type="submit" disabled={loading}>
                             {loading ? "Vytváření účtu..." : "Zaregistrovat se"}
                         </Button>
