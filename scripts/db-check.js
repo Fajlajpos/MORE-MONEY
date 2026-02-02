@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const { Client } = require('pg');
 
 const databaseUrl = 'postgresql://postgres:admin@127.0.0.1:5432/postgres'; // Try default DB first

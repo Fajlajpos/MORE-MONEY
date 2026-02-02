@@ -10,29 +10,27 @@ export async function POST(req: Request) {
         }
 
         const body = await req.json()
-        const { amount, category, description, date, isImpulse, merchant, subcategory } = body
+        const { amount, category, frequency, customCategoryName, dueDate, autoPay } = body
 
-        if (!amount || !category) {
+        if (!amount || !category || !frequency) {
             return new NextResponse("Missing required fields", { status: 400 })
         }
 
-        const expense = await prisma.variableExpense.create({
+        const fixedExpense = await prisma.fixedExpense.create({
             data: {
                 userId: session.user.id,
                 amount: Number(amount),
                 category,
-                description: description || null,
-                date: date ? new Date(date) : new Date(),
-                isImpulse: isImpulse || false,
-                merchant: merchant || null,
-                subcategory: subcategory || null,
-                tags: null
+                frequency,
+                customCategoryName: customCategoryName || null,
+                dueDate: dueDate ? Number(dueDate) : null,
+                autoPay: autoPay || false,
             },
         })
 
-        return NextResponse.json(expense)
+        return NextResponse.json(fixedExpense)
     } catch (error) {
-        console.log("[EXPENSE_POST]", error)
+        console.log("[FIXED_EXPENSE_POST]", error)
         return new NextResponse("Internal Error", { status: 500 })
     }
 }

@@ -1,3 +1,4 @@
+"use client"
 import { AiChatBot } from "@/components/features/ai/chat-bot"
 
 export default function AiPage() {
@@ -22,9 +23,21 @@ export default function AiPage() {
                     <div className="p-4 border rounded-xl bg-gradient-to-br from-primary/5 to-primary/10">
                         <h3 className="font-semibold mb-2">💡 Rychlé tipy</h3>
                         <ul className="text-sm space-y-2 text-muted-foreground">
-                            <li>• Zruš nevyužívaná předplatná</li>
-                            <li>• Vař si doma místo restaurací</li>
-                            <li>• Používej 30-denní pravidlo</li>
+                            <li>
+                                <button onClick={() => alert("Tato funkce bude brzy dostupná!")} className="hover:underline hover:text-primary text-left">
+                                    • Zruš nevyužívaná předplatná
+                                </button>
+                            </li>
+                            <li>
+                                <button onClick={() => alert("Tato funkce bude brzy dostupná!")} className="hover:underline hover:text-primary text-left">
+                                    • Vař si doma místo restaurací
+                                </button>
+                            </li>
+                            <li>
+                                <button onClick={() => alert("Tato funkce bude brzy dostupná!")} className="hover:underline hover:text-primary text-left">
+                                    • Používej 30-denní pravidlo
+                                </button>
+                            </li>
                         </ul>
                     </div>
 

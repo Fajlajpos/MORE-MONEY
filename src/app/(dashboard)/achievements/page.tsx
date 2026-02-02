@@ -1,9 +1,10 @@
 import * as React from "react"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prismadb"
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { Trophy, Medal, Star, Flame, Target } from "lucide-react"
+import { Trophy, Flame } from "lucide-react"
+import { BadgesGrid } from "@/components/features/achievements/badges-grid"
 
 export default async function AchievementsPage() {
     const session = await auth()
@@ -64,70 +65,8 @@ export default async function AchievementsPage() {
 
             {/* Badges Grid */}
             <h3 className="text-xl font-semibold">Tvoje Odznaky</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                {[
-                    { name: "První Krok", desc: "Zadal jsi první výdaj", icon: Star, color: "text-yellow-500", achieved: true },
-                    { name: "Spořič", desc: "Ušetřil jsi 10% příjmu", icon: PiggyBankIcon, color: "text-green-500", achieved: false },
-                    { name: "Investor", desc: "První investice", icon: TrendingUpIcon, color: "text-blue-500", achieved: false },
-                    { name: "Mistr Rozpočtu", desc: "Dodržel jsi rozpočet", icon: Target, color: "text-purple-500", achieved: false },
-                    { name: "Veterán", desc: "Používáš aplikaci 30 dní", icon: Medal, color: "text-orange-500", achieved: false },
-                ].map((badge, i) => (
-                    <Card key={i} className={`text-center ${!badge.achieved && "opacity-50 grayscale"}`}>
-                        <CardContent className="pt-6 flex flex-col items-center gap-3">
-                            <div className={`p-3 rounded-full bg-muted ${badge.achieved ? badge.color.replace('text-', 'bg-').replace('500', '100') : ''}`}>
-                                <badge.icon className={`h-8 w-8 ${badge.achieved ? badge.color : 'text-muted-foreground'}`} />
-                            </div>
-                            <div>
-                                <h4 className="font-semibold">{badge.name}</h4>
-                                <p className="text-xs text-muted-foreground">{badge.desc}</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
+            <BadgesGrid />
         </div>
     )
 }
 
-function PiggyBankIcon(props: React.SVGProps<SVGSVGElement>) {
-    return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2.5V5z" />
-            <line x1="18" x2="18" y1="11" y2="5" />
-            <path d="M8 15h.01" />
-            <path d="M17 15h.01" />
-            <path d="M13 12v2" />
-        </svg>
-    )
-}
-
-function TrendingUpIcon(props: React.SVGProps<SVGSVGElement>) {
-    return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
-            <polyline points="16 7 22 7 22 13" />
-        </svg>
-    )
-}

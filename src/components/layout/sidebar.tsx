@@ -12,14 +12,14 @@ import {
     Trophy,
     Settings,
     Menu,
-    X,
+
     Bot
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { ScrollArea } from "@/components/ui/scroll-area"
+
 import { Separator } from "@/components/ui/separator"
 
 const sidebarItems = [

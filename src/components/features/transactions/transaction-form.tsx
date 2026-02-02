@@ -74,7 +74,8 @@ export function TransactionForm({ onSuccess }: TransactionFormProps) {
     const [loading, setLoading] = useState(false)
 
     const form = useForm<TransactionFormValues>({
-        resolver: zodResolver(transactionSchema),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        resolver: zodResolver(transactionSchema) as any,
         defaultValues: {
             type: "expense",
             amount: "",

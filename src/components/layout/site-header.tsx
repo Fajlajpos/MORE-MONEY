@@ -1,7 +1,7 @@
 "use client"
 
 import { MobileSidebar } from "./sidebar"
-import { ModeToggle } from "@/components/mode-toggle" // To be implemented later or removed if strictly custom
+
 import { Button } from "@/components/ui/button"
 
 export function SiteHeader() {

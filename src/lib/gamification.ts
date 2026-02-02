@@ -36,7 +36,7 @@ export async function awardPoints(userId: string, points: number) {
     }
 }
 
-export async function checkAchievements(userId: string) {
+export async function checkAchievements() {
     // Placeholder for achievement checking logic
     // e.g. check if user has 100 transactions, award badge
 }
