@@ -1,5 +1,6 @@
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prismadb"
+import { Goal } from "@prisma/client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
@@ -48,7 +49,7 @@ export default async function GoalsPage() {
                     </Card>
                 )}
 
-                {goals.map((goal) => {
+                {goals.map((goal: Goal) => {
                     const percent = Math.min(100, Math.round((Number(goal.currentAmount) / Number(goal.targetAmount)) * 100))
 
                     return (

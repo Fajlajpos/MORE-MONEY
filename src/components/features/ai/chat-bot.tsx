@@ -1,15 +1,18 @@
 "use client"
 
-import { useChat } from 'ai/react';
+import { useChat, type UIMessage } from '@ai-sdk/react';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Send, Bot, User } from "lucide-react"
+import { useState, ChangeEvent } from "react";
 
 export function AiChatBot() {
-    const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
+    const { messages, sendMessage, status } = useChat();
+    const isLoading = status === 'submitted';
+    const [input, setInput] = useState('');
 
     return (
         <Card className="flex flex-col h-[600px] shadow-xl border-primary/20">
@@ -29,10 +32,10 @@ export function AiChatBot() {
                             <div className="text-center text-muted-foreground mt-10">
                                 <Bot className="h-12 w-12 mx-auto mb-2 opacity-50" />
                                 <p>Ahoj! Jsem tvůj AI asistent.</p>
-                                <p className="text-sm">Zeptej se třeba: "Jak ušetřit na jídle?"</p>
+                                <p className="text-sm">Zeptej se třeba: &quot;Jak ušetřit na jídle?&quot;</p>
                             </div>
                         )}
-                        {messages.map(m => (
+                        {messages.map((m: UIMessage) => (
                             <div key={m.id} className={`flex gap-3 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                 {m.role !== 'user' && (
                                     <Avatar className="h-8 w-8 bg-primary/10">
@@ -43,7 +46,7 @@ export function AiChatBot() {
                                     ? 'bg-primary text-primary-foreground'
                                     : 'bg-muted'
                                     }`}>
-                                    {m.content}
+                                    {m.display}
                                 </div>
                                 {m.role === 'user' && (
                                     <Avatar className="h-8 w-8 bg-muted">
@@ -66,10 +69,15 @@ export function AiChatBot() {
                 </ScrollArea>
             </CardContent>
             <CardFooter className="p-4 bg-muted/20">
-                <form onSubmit={handleSubmit} className="flex w-full gap-2">
+                <form onSubmit={(e) => {
+                    e.preventDefault();
+                    if (!input) return;
+                    sendMessage({ role: 'user', content: input });
+                    setInput('');
+                }} className="flex w-full gap-2">
                     <Input
                         value={input}
-                        onChange={handleInputChange}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
                         placeholder="Napiš zprávu..."
                         className="flex-1"
                     />

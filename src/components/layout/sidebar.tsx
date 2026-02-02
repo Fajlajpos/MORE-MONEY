@@ -32,6 +32,7 @@ const sidebarItems = [
     { icon: Bot, label: "AI Asistent", href: "/ai" },
 ]
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 export function Sidebar({ className }: SidebarProps) {

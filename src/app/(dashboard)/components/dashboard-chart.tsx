@@ -2,7 +2,13 @@
 
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-export function DashboardChart({ data }: { data: any[] }) {
+interface ChartData {
+    date: string;
+    amount: number;
+    type: string;
+}
+
+export function DashboardChart({ data }: { data: ChartData[] }) {
     if (!data || data.length === 0) {
         return (
             <div className="h-[300px] flex items-center justify-center text-muted-foreground bg-muted/10 rounded-md border border-dashed">
@@ -31,7 +37,12 @@ export function DashboardChart({ data }: { data: any[] }) {
                     <YAxis tickFormatter={(val) => `${val}`} tickLine={false} axisLine={false} fontSize={12} />
                     <Tooltip
                         contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-                        formatter={(value: any) => [`${value} Kč`, 'Částka']}
+                        formatter={(value) => {
+                            if (typeof value === 'number') {
+                                return [`${value.toLocaleString('cs-CZ')} Kč`, 'Částka'];
+                            }
+                            return null;
+                        }}
                     />
                     <Area type="monotone" dataKey="amount" stroke="#00C853" fill="url(#colorIncome)" strokeWidth={2} />
                     <defs>

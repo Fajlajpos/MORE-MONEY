@@ -34,7 +34,7 @@ Pokud jde o konkrétní rady, vždy upozorni, že nejsi certifikovaný finančn�
         });
 
         // Respond with the stream
-        return result.toDataStreamResponse();
+        return result.toTextStreamResponse();
     } catch (error) {
         console.error('AI Error:', error);
         return new Response('Internal Server Error', { status: 500 });

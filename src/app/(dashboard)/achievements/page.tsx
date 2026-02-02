@@ -1,3 +1,4 @@
+import * as React from "react"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prismadb"
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
@@ -88,7 +89,7 @@ export default async function AchievementsPage() {
     )
 }
 
-function PiggyBankIcon(props: any) {
+function PiggyBankIcon(props: React.SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}
@@ -111,7 +112,7 @@ function PiggyBankIcon(props: any) {
     )
 }
 
-function TrendingUpIcon(props: any) {
+function TrendingUpIcon(props: React.SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}
