@@ -1,9 +1,5 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-const { PrismaClient } = require('@prisma/client')
-const bcrypt = require('bcryptjs')
-require('dotenv').config()
-
-const prisma = new PrismaClient()
+const prisma = require('./client')
 
 async function main() {
     const email = process.env.ADMIN_EMAIL
