@@ -1,18 +1,12 @@
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prismadb"
-import { Income, VariableExpense } from "@prisma/client"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { ArrowUpRight, TrendingDown, Wallet } from "lucide-react"
+import { ArrowUpRight, TrendingDown, Wallet, ArrowRight } from "lucide-react"
 import { format } from "date-fns"
 import { cs } from "date-fns/locale"
 import { AddIncomeSheet } from "@/components/features/transactions/add-income-sheet"
-
-type DashboardData = {
-    totalIncome: number;
-    totalExpense: number;
-    balance: number;
-    recentTransactions: (Income & { type: 'income' } | VariableExpense & { type: 'expense' })[];
-}
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 export default async function DashboardPage() {
     const session = await auth()
@@ -21,7 +15,7 @@ export default async function DashboardPage() {
         return <div className="p-8">Přihlašte se prosím.</div>
     }
 
-    // Data fetching (simplified for clarity)
+    // Data fetching
     const incomes = await prisma.income.findMany({
         where: { userId: session.user.id },
         orderBy: { date: 'desc' },
@@ -46,19 +40,27 @@ export default async function DashboardPage() {
     const totalExpense = Number(allExpenses._sum.amount || 0)
     const balance = totalIncome - totalExpense
 
-    const recentTransactions = [
-        ...incomes.map((i) => ({ ...i, type: 'income' as const })),
-        ...expenses.map((e) => ({ ...e, type: 'expense' as const }))
+    // Combine and sort transactions
+    // Combine and sort transactions
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const incomeTransactions = incomes.map((i: any) => ({ ...i, type: 'income' as const }))
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const expenseTransactions = expenses.map((e: any) => ({ ...e, type: 'expense' as const }))
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const recentTransactions: any[] = [
+        ...incomeTransactions,
+        ...expenseTransactions
     ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-        .slice(0, 10)
+        .slice(0, 5) // Just show top 5 on dashboard
 
     return (
-        <div className="max-w-5xl mx-auto space-y-8">
+        <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-500">
             {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight">Můj Přehled</h2>
-                    <p className="text-muted-foreground">Vítejte zpět, {session.user.name || 'Uživateli'}</p>
+                    <h2 className="text-3xl font-bold tracking-tight text-foreground">Můj Přehled</h2>
+                    <p className="text-muted-foreground">Vítejte zpět, <span className="text-primary font-semibold">{session.user.name || 'Uživateli'}</span></p>
                 </div>
                 {/* Quick Actions */}
                 <div className="flex items-center gap-2">
@@ -67,36 +69,38 @@ export default async function DashboardPage() {
             </div>
 
             {/* Main Balance Card - Hero Section */}
-            <Card className="bg-primary/5 border-primary/20 overflow-hidden relative">
-                <div className="absolute top-0 right-0 p-8 opacity-10">
+            <Card className="bg-gradient-to-br from-indigo-500 via-indigo-600 to-violet-600 text-white border-none shadow-xl overflow-hidden relative group">
+                <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity duration-500">
                     <Wallet className="w-48 h-48" />
                 </div>
                 <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+                    <CardTitle className="text-sm font-medium text-indigo-100 uppercase tracking-wider flex items-center gap-2">
+                        <Wallet className="w-4 h-4" />
                         Aktuální Zůstatek
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className={`text-6xl font-bold tracking-tight ${balance >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600'}`}>
+                    <div className="text-6xl font-bold tracking-tight text-white mb-8">
                         {balance.toLocaleString('cs-CZ')} Kč
                     </div>
-                    <div className="flex gap-8 mt-6">
-                        <div className="flex items-center gap-2">
-                            <div className="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
-                                <ArrowUpRight className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+
+                    <div className="grid grid-cols-2 gap-4 max-w-md">
+                        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex items-center gap-4 border border-white/10 transition-transform hover:scale-105">
+                            <div className="p-3 bg-white/20 rounded-full">
+                                <ArrowUpRight className="h-5 w-5 text-emerald-300" />
                             </div>
                             <div>
-                                <p className="text-xs text-muted-foreground">Příjmy</p>
-                                <p className="font-semibold text-emerald-600">+{totalIncome.toLocaleString('cs-CZ')} Kč</p>
+                                <p className="text-xs text-indigo-100 mb-1">Příjmy</p>
+                                <p className="font-bold text-lg">+{totalIncome.toLocaleString('cs-CZ')} Kč</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-full">
-                                <TrendingDown className="h-4 w-4 text-red-600 dark:text-red-400" />
+                        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex items-center gap-4 border border-white/10 transition-transform hover:scale-105">
+                            <div className="p-3 bg-white/20 rounded-full">
+                                <TrendingDown className="h-5 w-5 text-rose-300" />
                             </div>
                             <div>
-                                <p className="text-xs text-muted-foreground">Výdaje</p>
-                                <p className="font-semibold text-red-600">-{totalExpense.toLocaleString('cs-CZ')} Kč</p>
+                                <p className="text-xs text-indigo-100 mb-1">Výdaje</p>
+                                <p className="font-bold text-lg">-{totalExpense.toLocaleString('cs-CZ')} Kč</p>
                             </div>
                         </div>
                     </div>
@@ -105,27 +109,41 @@ export default async function DashboardPage() {
 
             {/* Recent Transactions List */}
             <div className="space-y-4">
-                <h3 className="text-xl font-semibold">Poslední pohyby</h3>
-                <Card>
+                <div className="flex items-center justify-between">
+                    <h3 className="text-xl font-semibold">Poslední pohyby</h3>
+                    <Button variant="ghost" size="sm" asChild className="text-primary hover:text-primary/80">
+                        <Link href="/transactions" className="gap-1">
+                            Zobrazit vše <ArrowRight className="h-4 w-4" />
+                        </Link>
+                    </Button>
+                </div>
+
+                <Card className="border-none shadow-sm bg-card/50 backdrop-blur-sm">
                     <CardContent className="p-0">
                         {recentTransactions.length > 0 ? (
-                            <div className="divide-y">
+                            <div className="divide-y divide-border/50">
                                 {recentTransactions.map((tx) => (
-                                    <div key={tx.id} className="flex items-center justify-between p-4 hover:bg-muted/50 transition-colors">
+                                    <div key={tx.id} className="flex items-center justify-between p-5 hover:bg-muted/40 transition-colors group">
                                         <div className="flex items-center gap-4">
-                                            <div className={`p-2 rounded-full ${tx.type === 'income' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'}`}>
+                                            <div className={`p-3 rounded-2xl transition-colors ${tx.type === 'income'
+                                                ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400'
+                                                : 'bg-rose-100 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400'
+                                                }`}>
                                                 {tx.type === 'income' ? <ArrowUpRight className="h-5 w-5" /> : <TrendingDown className="h-5 w-5" />}
                                             </div>
                                             <div>
-                                                <p className="font-medium">
+                                                <p className="font-semibold text-foreground group-hover:text-primary transition-colors">
                                                     {tx.type === 'expense' ? tx.category : tx.source}
                                                 </p>
                                                 <p className="text-sm text-muted-foreground">
-                                                    {tx.description || format(tx.date, 'PPP', { locale: cs })}
+                                                    {tx.description || format(new Date(tx.date), 'dd. MMMM yyyy', { locale: cs })}
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className={`text-lg font-bold ${tx.type === 'expense' ? 'text-red-600' : 'text-emerald-600'}`}>
+                                        <div className={`text-lg font-bold ${tx.type === 'expense'
+                                            ? 'text-rose-600 dark:text-rose-400'
+                                            : 'text-emerald-600 dark:text-emerald-400'
+                                            }`}>
                                             {tx.type === 'expense' ? '-' : '+'}{Number(tx.amount).toLocaleString('cs-CZ')} Kč
                                         </div>
                                     </div>
@@ -133,7 +151,11 @@ export default async function DashboardPage() {
                             </div>
                         ) : (
                             <div className="p-12 text-center text-muted-foreground">
-                                Zatím žádné transakce. Přidejte první příjem!
+                                <div className="bg-muted/50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Wallet className="h-8 w-8 opacity-50" />
+                                </div>
+                                <p className="text-lg font-medium">Zatím žádné transakce</p>
+                                <p className="text-sm">Přidejte svůj první příjem tlačítkem nahoře!</p>
                             </div>
                         )}
                     </CardContent>

@@ -8,7 +8,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
-  
+
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
@@ -19,7 +19,7 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
-  
+
   /* Custom Semantic Colors */
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
@@ -31,12 +31,12 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  
+
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-  
+
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -53,129 +53,176 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  
+  --radius: 1rem;
+  /* Softer, rounder corners */
+
   /* Base - Light Mode */
-  --background: #F5F5F5; /* User: Off White */
-  --foreground: #1A1A1A; /* User: Almost Black */
+  --background: #F8FAFC;
+  /* Slate 50 - Soft White */
+  --foreground: #0F172A;
+  /* Slate 900 */
 
   /* Card */
-  --card: #FFFFFF; /* User: Pure White */
-  --card-foreground: #1A1A1A;
-  
-  --popover: #FFFFFF;
-  --popover-foreground: #1A1A1A;
+  --card: #FFFFFF;
+  --card-foreground: #0F172A;
 
-  /* Primary Blue */
-  --primary: #0066FF; 
+  --popover: #FFFFFF;
+  --popover-foreground: #0F172A;
+
+  /* Primary - Vibrant Indigo/Violet */
+  --primary: #6366F1;
+  /* Indigo 500 */
   --primary-foreground: #FFFFFF;
 
-  /* Secondary - Using Purple for branded accents or standard neutral? 
-     User said "Header gradient: Blue -> Purple". 
-     I'll make secondary a neutral for now to not clash, uses Dark Grey */
-  --secondary: #E0E0E0; /* Light Grey */
-  --secondary-foreground: #1A1A1A;
+  /* Secondary - Soft Lavender/Blue */
+  --secondary: #EEF2FF;
+  /* Indigo 50 */
+  --secondary-foreground: #4338CA;
+  /* Indigo 700 */
 
   /* Muted */
-  --muted: #E0E0E0;
-  --muted-foreground: #9E9E9E; /* Medium Grey */
+  --muted: #F1F5F9;
+  /* Slate 100 */
+  --muted-foreground: #64748B;
+  /* Slate 500 */
 
   /* Accent */
-  --accent: #E0E0E0;
-  --accent-foreground: #1A1A1A;
+  --accent: #F1F5F9;
+  --accent-foreground: #0F172A;
 
   /* Destructive */
-  --destructive: #D32F2F; /* User: Error Red */
+  --destructive: #EF4444;
+  /* Red 500 */
   --destructive-foreground: #FFFFFF;
 
   /* Custom Semantics */
-  --success: #00C853; /* User: Success Green */
+  --success: #10B981;
+  /* Emerald 500 */
   --success-foreground: #FFFFFF;
-  
-  --warning: #FF6D00; /* User: Warning Orange */
+
+  --warning: #F59E0B;
+  /* Amber 500 */
   --warning-foreground: #FFFFFF;
-  
-  --info: #7C4DFF; /* User: Info Purple */
+
+  --info: #3B82F6;
+  /* Blue 500 */
   --info-foreground: #FFFFFF;
 
   /* Borders & Inputs */
-  --border: #E0E0E0; /* Light Grey */
-  --input: #E0E0E0;
-  --ring: #0066FF; /* Primary */
+  --border: #E2E8F0;
+  /* Slate 200 */
+  --input: #E2E8F0;
+  --ring: #6366F1;
+  /* Primary */
 
-  /* Chart Colors (Gradients later, placeholders) */
-  --chart-1: #0066FF;
-  --chart-2: #00C853;
-  --chart-3: #FF6D00;
-  --chart-4: #7C4DFF;
-  --chart-5: #D32F2F;
+  /* Chart Colors */
+  --chart-1: #6366F1;
+  --chart-2: #10B981;
+  --chart-3: #F59E0B;
+  --chart-4: #3B82F6;
+  --chart-5: #EF4444;
 
   /* Sidebar */
   --sidebar: #FFFFFF;
-  --sidebar-foreground: #1A1A1A;
-  --sidebar-primary: #0066FF;
+  --sidebar-foreground: #0F172A;
+  --sidebar-primary: #6366F1;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #F5F5F5;
-  --sidebar-accent-foreground: #1A1A1A;
-  --sidebar-border: #E0E0E0;
-  --sidebar-ring: #0066FF;
+  --sidebar-accent: #EEF2FF;
+  /* Indigo 50 */
+  --sidebar-accent-foreground: #4338CA;
+  /* Indigo 700 */
+  --sidebar-border: #E2E8F0;
+  --sidebar-ring: #6366F1;
 }
 
 .dark {
   /* Base - Dark Mode */
-  --background: #121212; /* User: True black avoidance, but user requested 121212 */
-  --foreground: #E0E0E0; /* User: High contrast but not pure white */
+  --background: #020617;
+  /* Slate 950 */
+  --foreground: #F8FAFC;
+  /* Slate 50 */
 
   /* Card */
-  --card: #1E1E1E; /* User: Surface */
-  --card-foreground: #E0E0E0;
-  
-  --popover: #1E1E1E;
-  --popover-foreground: #E0E0E0;
+  --card: #0F172A;
+  /* Slate 900 */
+  --card-foreground: #F8FAFC;
 
-  /* Primary - Maybe softer for dark mode? Or keep brand? Keeping brand for now */
-  --primary: #0066FF; 
+  --popover: #0F172A;
+  --popover-foreground: #F8FAFC;
+
+  /* Primary */
+  --primary: #818CF8;
+  /* Indigo 400 */
   --primary-foreground: #FFFFFF;
 
-  --secondary: #2A2A2A;
-  --secondary-foreground: #E0E0E0;
+  --secondary: #1E293B;
+  /* Slate 800 */
+  --secondary-foreground: #F8FAFC;
 
-  --muted: #2A2A2A;
-  --muted-foreground: #9E9E9E;
+  --muted: #1E293B;
+  --muted-foreground: #94A3B8;
+  /* Slate 400 */
 
-  --accent: #2A2A2A;
-  --accent-foreground: #E0E0E0;
+  --accent: #1E293B;
+  --accent-foreground: #F8FAFC;
 
-  --destructive: #D32F2F;
+  --destructive: #EF4444;
   --destructive-foreground: #FFFFFF;
 
   /* Custom Semantics */
-  --success: #00C853;
+  --success: #10B981;
   --success-foreground: #FFFFFF;
-  --warning: #FF6D00;
+  --warning: #F59E0B;
   --warning-foreground: #FFFFFF;
-  --info: #7C4DFF;
+  --info: #3B82F6;
   --info-foreground: #FFFFFF;
 
-  --border: #2A2A2A; 
-  --input: #2A2A2A;
-  --ring: #0066FF;
+  --border: #1E293B;
+  --input: #1E293B;
+  --ring: #818CF8;
 
-  --sidebar: #1E1E1E;
-  --sidebar-foreground: #E0E0E0;
-  --sidebar-primary: #0066FF;
+  --sidebar: #020617;
+  --sidebar-foreground: #F8FAFC;
+  --sidebar-primary: #818CF8;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #2A2A2A;
-  --sidebar-accent-foreground: #E0E0E0;
-  --sidebar-border: #2A2A2A;
-  --sidebar-ring: #0066FF;
+  --sidebar-accent: #1E293B;
+  --sidebar-accent-foreground: #F8FAFC;
+  --sidebar-border: #1E293B;
+  --sidebar-ring: #818CF8;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
+    /* Soft Mesh Gradient for Light Mode */
+    background-image:
+      radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 0) 0, transparent 50%),
+      radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 0) 0, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 0) 0, transparent 50%);
+    background-color: var(--background);
   }
+}
+
+/* More vibrant mesh for light mode via a separate class or just overriding base if needed. */
+body {
+  background-color: #F8FAFC;
+  /* Stronger, more colorful mesh */
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15), transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(236, 72, 153, 0.10), transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.12), transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.12), transparent 40%);
+  background-attachment: fixed;
+}
+
+.dark body {
+  background-color: #020617;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.25), transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(236, 72, 153, 0.15), transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.20), transparent 50%);
 }
