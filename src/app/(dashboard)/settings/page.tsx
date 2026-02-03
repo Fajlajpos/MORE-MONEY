@@ -43,7 +43,7 @@ export default async function SettingsPage() {
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button>Uložit změny</Button>
+                            <Button className="btn-gradient">Uložit změny</Button>
                         </CardFooter>
                     </Card>
 

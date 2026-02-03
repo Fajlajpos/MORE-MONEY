@@ -111,9 +111,10 @@ export default async function DashboardPage() {
             <div className="space-y-4">
                 <div className="flex items-center justify-between">
                     <h3 className="text-xl font-semibold">Poslední pohyby</h3>
-                    <Button variant="ghost" size="sm" asChild className="text-primary hover:text-primary/80">
+                    <Button variant="ghost" size="sm" asChild className="hover:bg-indigo-50 dark:hover:bg-indigo-950/30 group">
                         <Link href="/transactions" className="gap-1">
-                            Zobrazit vše <ArrowRight className="h-4 w-4" />
+                            <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent font-semibold group-hover:from-indigo-500 group-hover:to-purple-500">Zobrazit vše</span>
+                            <ArrowRight className="h-4 w-4 text-purple-500" />
                         </Link>
                     </Button>
                 </div>

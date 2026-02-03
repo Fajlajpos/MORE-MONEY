@@ -95,10 +95,12 @@ export function AddGoalSheet() {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button className="gap-2 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-md border-0">
-                    <Target className="h-4 w-4" />
-                    Nový cíl
-                </Button>
+                <SheetTrigger asChild>
+                    <Button className="gap-2 btn-gradient">
+                        <Target className="h-4 w-4" />
+                        Nový cíl
+                    </Button>
+                </SheetTrigger>
             </SheetTrigger>
             <SheetContent>
                 <SheetHeader>

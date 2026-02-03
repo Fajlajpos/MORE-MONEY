@@ -36,7 +36,7 @@ export default async function BudgetPage() {
                 </div>
                 <Sheet>
                     <SheetTrigger asChild>
-                        <Button className="gap-2">
+                        <Button className="gap-2 btn-gradient">
                             <Plus className="h-4 w-4" />
                             Přidat pravidelnou platbu
                         </Button>

@@ -209,20 +209,28 @@
 
 /* More vibrant mesh for light mode via a separate class or just overriding base if needed. */
 body {
-  background-color: #F8FAFC;
+  background-color: #F5F3FF;
+  /* Violet 50/Tint - Distinctly colored base */
   /* Stronger, more colorful mesh */
   background-image:
-    radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15), transparent 40%),
-    radial-gradient(circle at 90% 10%, rgba(236, 72, 153, 0.10), transparent 40%),
-    radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.12), transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.12), transparent 40%);
+    radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.20), transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(236, 72, 153, 0.15), transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.15), transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.15), transparent 40%);
   background-attachment: fixed;
 }
 
 .dark body {
-  background-color: #020617;
+  background-color: #0F172A;
+  /* Slate 900 */
   background-image:
-    radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.25), transparent 40%),
-    radial-gradient(circle at 90% 10%, rgba(236, 72, 153, 0.15), transparent 40%),
-    radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.20), transparent 50%);
+    radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.30), transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(236, 72, 153, 0.20), transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.25), transparent 50%);
+}
+
+@layer components {
+  .btn-gradient {
+    @apply bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:via-purple-500 hover:to-pink-500 text-white shadow-lg shadow-indigo-500/20 border-0 transition-all duration-300 hover:scale-[1.02] active:scale-95 bg-[length:200%_auto];
+  }
 }

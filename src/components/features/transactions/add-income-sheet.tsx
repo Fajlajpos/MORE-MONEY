@@ -83,7 +83,7 @@ export function AddIncomeSheet() {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button size="lg" className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm">
+                <Button size="lg" className="gap-2 btn-gradient">
                     <Wallet className="h-5 w-5" />
                     Přidat Příjem / Výplatu
                 </Button>
