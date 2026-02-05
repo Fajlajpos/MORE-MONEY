@@ -26,6 +26,17 @@ export async function POST(req: Request) {
             },
         })
 
+        // Award Points for Income
+        try {
+            await prisma.userPoints.upsert({
+                where: { userId: session.user.id },
+                create: { userId: session.user.id, totalPoints: 10, level: 1 }, // Equal to expense
+                update: { totalPoints: { increment: 10 } }
+            })
+        } catch (e) {
+            console.error("Failed to award points", e)
+        }
+
         return NextResponse.json(income)
     } catch (error) {
         console.log("[INCOME_POST]", error)

@@ -5,6 +5,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  // NOTE: Hardcoded for debugging environment issue
+  url      = "postgresql://postgres:admin@127.0.0.1:5432/MAKE_MONEY?schema=public"
 }
 
 enum UserRole {
@@ -42,6 +44,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   lastLoginAt   DateTime?
   
+  // Relations
   incomes           Income[]
   fixedExpenses     FixedExpense[]
   variableExpenses  VariableExpense[]
@@ -49,8 +52,13 @@ model User {
   achievements      UserAchievement[]
   points            UserPoints?
   aiConversations   AiConversation[]
+  aiInsights        AiInsight[]
   notifications     Notification[]
   settings          UserSettings?
+  monthlySavings    MonthlySavings[]
+  challenges        UserChallenge[]
+  consents          UserConsent[]
+  exportRequests    DataExportRequest[]
   
   accounts      Account[]
   sessions      Session[]
@@ -111,6 +119,7 @@ model FixedExpense {
   frequency   String
   dueDate     Int?
   autoPay     Boolean  @default(false)
+  description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
@@ -127,9 +136,14 @@ model VariableExpense {
   description String?
   isImpulse   Boolean  @default(false)
   merchant    String?
-  tags        String? // Changed from String[]
+  paymentMethod String?
+  tags        String[] // Tags as array of strings
+  receiptUrl  String?
   
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+  @@index([category])
 }
 
 model Goal {
@@ -141,20 +155,63 @@ model Goal {
   deadline      DateTime?
   category      String?
   imageUrl      String?
+  priority      Int      @default(1)
   isCompleted   Boolean  @default(false)
+  completedAt   DateTime?
   createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   
+  contributions GoalContribution[]
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model GoalContribution {
+  id        String   @id @default(uuid())
+  goalId    String
+  amount    Float
+  date      DateTime @default(now())
+  notes     String?
+  
+  goal      Goal     @relation(fields: [goalId], references: [id], onDelete: Cascade)
+}
+
+model MonthlySavings {
+  id           String   @id @default(uuid())
+  userId       String
+  month        Int
+  year         Int
+  targetAmount Float
+  actualAmount Float
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Gamification Models
 model UserPoints {
   id            String   @id @default(uuid())
   userId        String   @unique
   totalPoints   Int      @default(0)
   level         Int      @default(1)
   currentStreak Int      @default(0)
+  longestStreak Int      @default(0)
+  lastActivityDate DateTime?
+  updatedAt     DateTime @updatedAt
   
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Achievement {
+  id          String   @id @default(uuid())
+  code        String   @unique // e.g., 'first_1k_saved'
+  name        String
+  description String
+  iconUrl     String?
+  points      Int
+  category    String?
+  
+  users       UserAchievement[]
 }
 
 model UserAchievement {
@@ -163,28 +220,88 @@ model UserAchievement {
   achievementId String
   unlockedAt    DateTime @default(now())
   
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
 }
 
+model Challenge {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  type        String // weekly, monthly, custom
+  category    String?
+  pointsReward Int
+  startDate   DateTime?
+  endDate     DateTime?
+  isActive    Boolean  @default(true)
+  
+  participants UserChallenge[]
+}
+
+model UserChallenge {
+  id          String   @id @default(uuid())
+  userId      String
+  challengeId String
+  progress    Float    @default(0)
+  isCompleted Boolean  @default(false)
+  completedAt DateTime?
+  joinedAt    DateTime @default(now())
+  
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+}
+
+// AI Integration Models
 model AiConversation {
   id          String   @id @default(uuid())
   userId      String
+  sessionId   String?
   message     String
   role        String
+  tokensUsed  Int?
+  modelUsed   String?
   createdAt   DateTime @default(now())
   
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId, sessionId])
 }
 
+model AiInsight {
+  id              String   @id @default(uuid())
+  userId          String
+  type            String   // savings_opportunity, warning, tip
+  category        String?
+  title           String
+  message         String
+  potentialSaving Float?
+  priority        Int      @default(1)
+  isRead          Boolean  @default(false)
+  isActedOn       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  expiresAt       DateTime?
+  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// System & Compliance Models
 model Notification {
   id          String   @id @default(uuid())
   userId      String
+  type        String   // email, push, in_app
+  category    String   // reminder, achievement, warning, info
   title       String
   message     String
+  actionUrl   String?
   isRead      Boolean  @default(false)
+  sentAt      DateTime @default(now())
   createdAt   DateTime @default(now())
   
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
 }
 
 model UserSettings {
@@ -193,5 +310,45 @@ model UserSettings {
   budgetLimit Float?
   savingGoal  Float?
   
+  // Notification Preferences
+  emailEnabled Boolean @default(true)
+  pushEnabled  Boolean @default(false)
+  
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserConsent {
+  id          String   @id @default(uuid())
+  userId      String
+  type        String   // gdpr, marketing, analytics, ai_processing
+  isGranted   Boolean
+  grantedAt   DateTime?
+  revokedAt   DateTime?
+  ipAddress   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DataExportRequest {
+  id          String   @id @default(uuid())
+  userId      String
+  status      String   // pending, processing, completed, failed
+  fileUrl     String?
+  requestedAt DateTime @default(now())
+  completedAt DateTime?
+  expiresAt   DateTime?
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserAnalytics {
+  id          String   @id @default(uuid())
+  userId      String?
+  eventType   String
+  eventName   String
+  eventData   Json?
+  sessionId   String?
+  createdAt   DateTime @default(now())
 }

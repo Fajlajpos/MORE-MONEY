@@ -56,7 +56,9 @@ const INCOME_CATEGORIES = [
 
 const EXPENSE_CATEGORIES = [
     { value: "food", label: "Jídlo a nákupy" },
-    { value: "transport", label: "Doprava / Auto" },
+    { value: "transport", label: "Doprava / MHD" },
+    { value: "fuel", label: "Palivo" },
+    { value: "smoking", label: "Kouření / Alkohol" },
     { value: "housing", label: "Bydlení" },
     { value: "utilities", label: "Energie a služby" },
     { value: "entertainment", label: "Zábava" },
@@ -252,6 +254,31 @@ export function TransactionForm({ onSuccess }: TransactionFormProps) {
                             </FormItem>
                         )}
                     />
+                )}
+
+                {/* AI Context Fields */}
+                {form.watch("category") === "fuel" && (
+                    <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800 space-y-3">
+                        <h4 className="text-sm font-semibold text-yellow-800 dark:text-yellow-200 flex items-center gap-2">
+                            ⛽ Kontext pro AI úsporu
+                        </h4>
+                        <div className="grid grid-cols-2 gap-3">
+                            {/* Placeholder inputs - logic to be connected to saving additional metadata */}
+                            <Input placeholder="Litry (např. 40)" type="number" className="bg-white" />
+                            <Input placeholder="Cena za litr" type="number" className="bg-white" />
+                        </div>
+                        <p className="text-xs text-muted-foreground">AI vám pomůže najít levnější čerpací stanice v okolí.</p>
+                    </div>
+                )}
+
+                {form.watch("category") === "smoking" && (
+                    <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-lg space-y-3">
+                        <h4 className="text-sm font-semibold flex items-center gap-2">
+                            🚬 Kalkulačka závislosti
+                        </h4>
+                        <Input placeholder="Počet balíčků / kusů" type="number" className="bg-white" />
+                        <p className="text-xs text-muted-foreground">AI spočítá, kolik byste ušetřili přechodem na alternativy nebo omezením.</p>
+                    </div>
                 )}
 
                 <FormField

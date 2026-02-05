@@ -1,113 +1,101 @@
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prismadb"
-import { Goal } from "@prisma/client"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Goal } from "@/lib/schema-types"
+import { AddGoalDialog } from "@/components/features/goals/add-goal-dialog"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { Target, Calendar, TrendingUp } from "lucide-react"
 import { format } from "date-fns"
 import { cs } from "date-fns/locale"
-import { AddGoalSheet } from "@/components/features/goals/add-goal-sheet"
+import { Target, Trophy } from "lucide-react"
 
 export default async function GoalsPage() {
     const session = await auth()
-    if (!session?.user?.id) return null
 
-    const goals = await prisma.goal.findMany({
-        where: { userId: session.user.id },
-        orderBy: { createdAt: 'desc' }
-    })
-
-    // Helper to pick a gradient based on index to add variety
-    const getGradient = (index: number) => {
-        const gradients = [
-            "from-pink-500 to-rose-500",
-            "from-indigo-500 to-purple-600",
-            "from-emerald-400 to-cyan-500",
-            "from-orange-400 to-amber-500",
-            "from-blue-400 to-indigo-500",
-        ]
-        return gradients[index % gradients.length]
+    if (!session?.user?.id) {
+        return <div className="p-8">Přihlašte se prosím.</div>
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const goals = (await prisma.goal.findMany({
+        where: { userId: session.user.id },
+        orderBy: { createdAt: 'desc' }
+    })) as Goal[]
+
     return (
-        <div className="space-y-8 animate-in fade-in duration-500">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-8 p-8 pt-6 animate-in fade-in duration-500">
+            <div className="flex items-center justify-between space-y-2">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight text-foreground">Finanční Cíle</h2>
-                    <p className="text-muted-foreground">Sledujte svou cestu za svými sny.</p>
+                    <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Finanční Cíle</h2>
+                    <p className="text-muted-foreground">
+                        Sledujte své sny a plánujte budoucnost.
+                    </p>
                 </div>
-                <AddGoalSheet />
+                <div className="flex items-center space-x-2">
+                    <AddGoalDialog />
+                </div>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {goals.length === 0 && (
-                    <Card className="col-span-full border-dashed p-12 bg-muted/30">
-                        <div className="flex flex-col items-center justify-center text-center space-y-4">
-                            <div className="p-4 rounded-full bg-indigo-100 dark:bg-indigo-900/30">
-                                <Target className="h-12 w-12 text-indigo-600 dark:text-indigo-400" />
-                            </div>
-                            <div>
-                                <h3 className="text-xl font-bold">Zatím žádné cíle</h3>
-                                <p className="text-muted-foreground max-w-sm mt-2">
-                                    Nastavte si svůj první cíl, ať už je to dovolená, nové auto nebo rezerva.
-                                </p>
-                            </div>
-                            <div className="mt-4">
-                                <AddGoalSheet />
-                            </div>
-                        </div>
-                    </Card>
-                )}
-
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                {goals.map((goal: any, index: number) => {
-                    const percent = Math.min(100, Math.round((Number(goal.currentAmount) / Number(goal.targetAmount)) * 100))
-                    const gradient = getGradient(index)
-
-                    return (
-                        <Card key={goal.id} className="flex flex-col overflow-hidden border-none shadow-lg group hover:shadow-xl transition-all duration-300">
-                            {/* Color Header */}
-                            <div className={`h-2 w-full bg-gradient-to-r ${gradient}`} />
-
-                            <CardHeader className="pb-4">
-                                <div className="flex justify-between items-start">
-                                    <CardTitle className="text-xl">{goal.name}</CardTitle>
-                                    <div className={`px-3 py-1 rounded-full text-xs font-bold text-white bg-gradient-to-r ${gradient}`}>
-                                        {percent}%
+            {goals.length === 0 ? (
+                <div className="flex flex-col items-center justify-center p-12 border-2 border-dashed rounded-lg bg-slate-50/50 dark:bg-slate-900/50">
+                    <Trophy className="h-12 w-12 text-muted-foreground mb-4 opacity-50" />
+                    <h3 className="text-lg font-medium">Zatím nemáte žádné cíle</h3>
+                    <p className="text-sm text-muted-foreground mb-4">Vytvořte si první cíl a začněte spořit na své sny.</p>
+                    <AddGoalDialog />
+                </div>
+            ) : (
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {goals.map((goal) => {
+                        const progress = Math.min(Math.round((goal.currentAmount / goal.targetAmount) * 100), 100);
+                        return (
+                            <Card key={goal.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300 border-t-4 border-t-indigo-500">
+                                <CardHeader className="pb-2">
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <CardTitle className="text-xl">{goal.name}</CardTitle>
+                                            <CardDescription>
+                                                {goal.deadline ? `Do: ${format(new Date(goal.deadline), "P", { locale: cs })}` : "Bez termínu"}
+                                            </CardDescription>
+                                        </div>
+                                        {goal.imageUrl && (
+                                            // eslint-disable-next-line @next/next/no-img-element
+                                            <img
+                                                src={goal.imageUrl}
+                                                alt={goal.name}
+                                                className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
+                                            />
+                                        )}
+                                        {!goal.imageUrl && <Target className="h-8 w-8 text-indigo-100" />}
                                     </div>
-                                </div>
-                                <CardDescription>
-                                    Cíl: {Number(goal.targetAmount).toLocaleString('cs-CZ')} Kč
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-6 flex-1">
-                                <div className="space-y-2">
-                                    <div className="flex justify-between text-sm">
-                                        <span className="text-muted-foreground">Našetřeno</span>
-                                        <span className={`font-bold`}>{Number(goal.currentAmount).toLocaleString('cs-CZ')} Kč</span>
+                                </CardHeader>
+                                <CardContent className="space-y-4 pt-4">
+                                    <div className="space-y-2">
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-muted-foreground">Našetřeno</span>
+                                            <span className="font-bold text-indigo-600">{goal.currentAmount.toLocaleString('cs-CZ')} Kč</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-muted-foreground">Cíl</span>
+                                            <span>{goal.targetAmount.toLocaleString('cs-CZ')} Kč</span>
+                                        </div>
+                                        <Progress value={progress} className="h-3 bg-indigo-100 dark:bg-indigo-900" indicatorClassName="bg-gradient-to-r from-blue-500 to-indigo-600" />
+                                        <div className="text-right text-xs text-muted-foreground">{progress}% hotovo</div>
                                     </div>
-                                    <Progress value={percent} className="h-3 bg-muted" />
-                                    {/* Custom colored indicator based on gradient would be tricky with shadcn progress, keep default or customize later */}
-                                </div>
-
-                                {goal.deadline && (
-                                    <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 p-2 rounded-lg">
-                                        <Calendar className="h-4 w-4 text-indigo-500" />
-                                        <span>Termín: <span className="font-medium">{format(new Date(goal.deadline), 'PPP', { locale: cs })}</span></span>
-                                    </div>
-                                )}
-                            </CardContent>
-                            <CardFooter className="pt-0">
-                                <Button variant="outline" className="w-full gap-2 border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700 dark:border-indigo-800 dark:hover:bg-indigo-950">
-                                    <TrendingUp className="h-4 w-4" />
-                                    Přidat příspěvek
-                                </Button>
-                            </CardFooter>
-                        </Card>
-                    )
-                })}
-            </div>
+                                    {goal.description && (
+                                        <p className="text-sm text-muted-foreground line-clamp-2 italic border-l-2 border-indigo-200 pl-2">
+                                            {goal.description}
+                                        </p>
+                                    )}
+                                </CardContent>
+                                <CardFooter className="bg-slate-50 dark:bg-slate-900/50 p-3 flex justify-between items-center text-xs text-muted-foreground">
+                                    <span>Vytvořeno {format(new Date(goal.createdAt), "P", { locale: cs })}</span>
+                                    {/* Placeholder for Edit/Add Contribution buttons */}
+                                    <Button variant="ghost" size="sm" className="h-7 text-xs hover:text-indigo-600">Detail</Button>
+                                </CardFooter>
+                            </Card>
+                        )
+                    })}
+                </div>
+            )}
         </div>
     )
 }

@@ -1,6 +1,6 @@
+import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prismadb"
-import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
     try {
@@ -10,7 +10,7 @@ export async function POST(req: Request) {
         }
 
         const body = await req.json()
-        const { name, targetAmount, currentAmount, deadline } = body
+        const { name, targetAmount, currentAmount, deadline, description, imageUrl } = body
 
         if (!name || !targetAmount) {
             return new NextResponse("Missing required fields", { status: 400 })
@@ -20,16 +20,28 @@ export async function POST(req: Request) {
             data: {
                 userId: session.user.id,
                 name,
-                targetAmount: parseFloat(targetAmount),
-                currentAmount: parseFloat(currentAmount),
+                targetAmount: Number(targetAmount),
+                currentAmount: Number(currentAmount) || 0,
                 deadline: deadline ? new Date(deadline) : null,
-            }
+                description: description || null,
+                imageUrl: imageUrl || null,
+            },
         })
 
-        return NextResponse.json(goal)
+        // Award Points for Goal Creation
+        try {
+            await prisma.userPoints.upsert({
+                where: { userId: session.user.id },
+                create: { userId: session.user.id, totalPoints: 50, level: 1 },
+                update: { totalPoints: { increment: 50 } }
+            })
+        } catch (e) {
+            console.error("Failed to award points", e)
+        }
 
+        return NextResponse.json(goal)
     } catch (error) {
-        console.error("[GOALS_POST]", error)
+        console.log("[GOALS_POST]", error)
         return new NextResponse("Internal Error", { status: 500 })
     }
 }
