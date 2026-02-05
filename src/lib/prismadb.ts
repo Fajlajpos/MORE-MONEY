@@ -187,6 +187,19 @@ const extendedPrisma = {
                 return { _sum: { amount: result[0]?.sum || 0 } };
             }
             return { _sum: { amount: 0 } };
+        },
+        groupBy: async (args: any) => {
+            // New method for Pie Chart
+            const userId = args.where.userId;
+            if (args.by.includes('category')) {
+                return await prisma.$queryRawUnsafe(`
+                    SELECT category, SUM(amount) as _sum 
+                    FROM "VariableExpense" 
+                    WHERE "userId" = '${userId}' 
+                    GROUP BY category
+                `);
+            }
+            return [];
         }
     },
     income: {
@@ -199,6 +212,20 @@ const extendedPrisma = {
                 VALUES (${id}, ${data.userId}, ${data.amount}, ${data.source}, ${data.description}, ${data.date})
              `;
             return { id, ...data };
+        },
+        findMany: async (args: any) => {
+            const userId = args.where.userId;
+            const limit = args.take ? `LIMIT ${args.take}` : '';
+            const orderBy = args.orderBy ? `ORDER BY date DESC` : '';
+            return await prisma.$queryRawUnsafe(`SELECT * FROM "Income" WHERE "userId" = '${userId}' ${orderBy} ${limit}`);
+        },
+        aggregate: async (args: any) => {
+            if (args._sum && args._sum.amount) {
+                const userId = args.where.userId;
+                const result: any[] = await prisma.$queryRawUnsafe(`SELECT SUM(amount) as sum FROM "Income" WHERE "userId" = '${userId}'`);
+                return { _sum: { amount: result[0]?.sum || 0 } };
+            }
+            return { _sum: { amount: 0 } };
         }
     }
 };
