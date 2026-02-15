@@ -1,12 +1,15 @@
 
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prismadb"
+
+export const dynamic = 'force-dynamic'
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Trophy, Medal, Crown } from "lucide-react"
 
 export default async function LeaderboardPage() {
-    const session = await auth()
+    await auth()
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const leaderboard = (await prisma.userPoints.findLeaderboard(10)) as any[]

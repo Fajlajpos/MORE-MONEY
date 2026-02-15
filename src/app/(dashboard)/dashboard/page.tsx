@@ -1,8 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prismadb"
+
+export const dynamic = 'force-dynamic'
+
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { ArrowUpRight, TrendingDown, Wallet, ArrowRight } from "lucide-react"
-import { format, subMonths, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns"
+import { format, subMonths } from "date-fns"
 import { cs } from "date-fns/locale"
 import { AddIncomeSheet } from "@/components/features/transactions/add-income-sheet"
 import Link from "next/link"
@@ -24,12 +28,12 @@ export default async function DashboardPage() {
         where: { userId: session.user.id },
         orderBy: { date: 'desc' },
         take: 5
-    })
+    }) as any[]
     const expenses = await prisma.variableExpense.findMany({
         where: { userId: session.user.id },
         orderBy: { date: 'desc' },
         take: 50 // Fetch more for heatmap
-    })
+    }) as any[]
 
     // 2. Aggregations
     const totalIncome = (await prisma.income.aggregate({
@@ -47,7 +51,7 @@ export default async function DashboardPage() {
     // 3. AI Insights (Using extended client)
     const insights = await prisma.aiInsight.findMany({
         where: { userId: session.user.id, isRead: false }
-    });
+    }) as any[];
 
     // 4. Prepare Heatmap Data
     const heatmapData = expenses.map((e: any) => ({

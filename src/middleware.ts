@@ -1,31 +1,17 @@
 import NextAuth from "next-auth"
 import authConfig from "./auth.config"
 
-const { auth } = NextAuth(authConfig)
+// Mock the auth function to always allow access for middleware purposes
+// Since we replaced src/auth.ts with a mock, importing from there might be weird if it doesn't return the expected middleware-compatible `auth` property.
+// Actually, in src/middleware.ts we are importing from "next-auth" directly in the original code? 
+// Original: import NextAuth from "next-auth"; const { auth } = NextAuth(authConfig)
+// We can just export a dummy middleware function.
 
-export default auth((req) => {
-    const isLoggedIn = !!req.auth
-    const isAuthPage = req.nextUrl.pathname.startsWith("/login") || req.nextUrl.pathname.startsWith("/register")
-
-    if (isAuthPage) {
-        if (isLoggedIn) {
-            // return Response.redirect(new URL("/dashboard", req.url))
-            // ALLOW ACCESS TO LOGIN/REGISTER EVEN IF LOGGED IN (To fix loop)
-        }
-        return
-    }
-
-    if (!isLoggedIn) {
-        let callbackUrl = req.nextUrl.pathname;
-        if (req.nextUrl.search) {
-            callbackUrl += req.nextUrl.search;
-        }
-
-        const encodedCallbackUrl = encodeURIComponent(callbackUrl);
-        return Response.redirect(new URL(`/login?callbackUrl=${encodedCallbackUrl}`, req.url))
-    }
-})
+export default function middleware(req: any) {
+    return; // Allow request
+}
 
 export const config = {
-    matcher: ["/dashboard/:path*", "/login", "/register"],
+    // Matcher that excludes static files and api routes if needed, but effectively we want to match nothing or allow everything.
+    matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 }

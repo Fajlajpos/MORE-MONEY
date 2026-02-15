@@ -2,6 +2,20 @@ import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prismadb"
 
+export const dynamic = 'force-dynamic'
+
+export async function GET(req: Request) {
+    try {
+        const session = await auth()
+        if (!session?.user?.id) {
+            return new NextResponse("Unauthorized", { status: 401 })
+        }
+    } catch (error) {
+        console.log("[INCOME_GET]", error)
+        return new NextResponse("Internal Error", { status: 500 })
+    }
+}
+
 export async function POST(req: Request) {
     try {
         const session = await auth()

@@ -2,10 +2,7 @@ import { auth } from "@/auth"
 import { prisma } from "@/lib/prismadb"
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
 import { AddFixedExpenseDialog } from "@/components/features/expenses/add-fixed-expense-dialog"
-import { Progress } from "@/components/ui/progress"
 import { AlertCircle, CheckCircle2, Calendar } from "lucide-react"
-import { format } from "date-fns"
-import { cs } from "date-fns/locale"
 
 import { FixedExpense } from "@/lib/schema-types"
 
@@ -17,7 +14,7 @@ export default async function BudgetPage() {
     }
 
     // Načtení fixních výdajů
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const fixedExpenses = (await prisma.fixedExpense.findMany({
         where: { userId: session.user.id },
         orderBy: { amount: 'desc' }

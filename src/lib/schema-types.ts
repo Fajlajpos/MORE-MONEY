@@ -129,6 +129,7 @@ export interface Goal {
     currentAmount: number;
     deadline?: Date | null;
     category?: string | null;
+    description?: string | null; // Added
     imageUrl?: string | null; // Changed to optional to match schema
     priority: number;
     isCompleted: boolean;

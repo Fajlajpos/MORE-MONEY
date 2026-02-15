@@ -1,6 +1,9 @@
 import * as React from "react"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prismadb"
+
+export const dynamic = 'force-dynamic'
+
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Trophy, Flame } from "lucide-react"

@@ -1,9 +1,13 @@
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prismadb"
+
+export const dynamic = 'force-dynamic'
+
 import { ExpensePieChart } from "@/components/features/analytics/expense-pie-chart"
 import { AiInsightsList } from "@/components/features/analytics/ai-insights-list"
-import { BarChart, PieChart, Activity } from "lucide-react"
+import { Activity } from "lucide-react"
 
 export default async function AnalysisPage() {
     const session = await auth()
@@ -13,7 +17,7 @@ export default async function AnalysisPage() {
     }
 
     // Fetch data for Pie Chart
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const expensesByCategory = await prisma.variableExpense.groupBy({
         by: ['category'],
         where: { userId: session.user.id },
@@ -30,7 +34,7 @@ export default async function AnalysisPage() {
     })) : []
 
     // Fetch AI Insights
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const insights = await prisma.aiInsight.findMany({
         where: { userId: session.user.id },
         orderBy: { createdAt: 'desc' },

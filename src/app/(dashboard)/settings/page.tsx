@@ -1,11 +1,14 @@
 import { auth } from "@/auth"
+
+export const dynamic = 'force-dynamic'
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
-import { User, Bell, Palette, Moon, Sun, Shield, CreditCard } from "lucide-react"
+import { User, Bell, Palette, Moon } from "lucide-react"
 
 export default async function SettingsPage() {
     const session = await auth()

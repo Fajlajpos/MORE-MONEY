@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Plus, ArrowDownLeft, ArrowUpRight } from "lucide-react"
@@ -11,6 +12,9 @@ import {
 } from "@/components/ui/sheet"
 import { TransactionForm } from "@/components/features/transactions/transaction-form"
 import { prisma } from "@/lib/prismadb"
+
+export const dynamic = 'force-dynamic'
+
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { format } from "date-fns"
@@ -22,10 +26,10 @@ export default async function TransactionsPage() {
 
     const incomes = await prisma.income.findMany({
         where: { userId: session.user.id }
-    })
+    }) as any[]
     const expenses = await prisma.variableExpense.findMany({
         where: { userId: session.user.id }
-    })
+    }) as any[]
 
     const transactions = [
         ...incomes.map(i => ({ ...i, type: 'income' })),
@@ -81,8 +85,6 @@ export default async function TransactionsPage() {
                                         </div>
                                         <div>
                                             <p className="font-semibold">{
-                                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                                // @ts-ignore
                                                 t.source || t.customCategoryName || t.category
                                             }</p>
                                             <p className="text-sm text-muted-foreground">{format(new Date(t.date), "PPP", { locale: cs })}</p>

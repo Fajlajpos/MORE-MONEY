@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prismadb"
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: Request) {
     try {
         const session = await auth()

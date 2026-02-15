@@ -20,6 +20,7 @@ export function InsightCard({ id, type, title, message, potentialSaving, onDismi
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsVisible(true);
     }, []);
 

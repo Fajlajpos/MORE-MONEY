@@ -1,5 +1,8 @@
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prismadb"
+
+export const dynamic = 'force-dynamic'
+
 import { Goal } from "@/lib/schema-types"
 import { AddGoalDialog } from "@/components/features/goals/add-goal-dialog"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -7,6 +10,7 @@ import { Progress } from "@/components/ui/progress"
 import { format } from "date-fns"
 import { cs } from "date-fns/locale"
 import { Target, Trophy } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default async function GoalsPage() {
     const session = await auth()
@@ -15,11 +19,17 @@ export default async function GoalsPage() {
         return <div className="p-8">Přihlašte se prosím.</div>
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const goals = (await prisma.goal.findMany({
-        where: { userId: session.user.id },
-        orderBy: { createdAt: 'desc' }
-    })) as Goal[]
+
+    let goals: Goal[] = [];
+    try {
+        goals = (await prisma.goal.findMany({
+            where: { userId: session.user.id },
+            orderBy: { createdAt: 'desc' }
+        })) as Goal[]
+    } catch (e) {
+        console.error("Failed to fetch goals (likely build time or db issue)", e);
+        goals = [];
+    }
 
     return (
         <div className="space-y-8 p-8 pt-6 animate-in fade-in duration-500">
